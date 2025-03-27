@@ -29,6 +29,6 @@ class MessageSent implements ShouldBroadcastNow
 
     public function broadcastAs()
     {
-        return "MessageSent"; // This ensures the event name is properly formatted
+        return "MessageSent";
     }
 }

@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 use App\Events\MessageSent;
-
+use App\Models\Message;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 class HomepagesController extends Controller
 {
@@ -14,13 +15,25 @@ class HomepagesController extends Controller
     }
 
     public function chatingRoom(Request $request){
-        $message = $request->input('message');
+        $messages = Message::orderBy('created_at', 'desc')->get();
 
-        // Broadcast the message
+        return Inertia::render('ChatRoom', [
+            'messages' => $messages
+        ]);
+    }
 
-        event(new \App\Events\MessageSent("Hello from Tinker!"));
-
-        broadcast(new MessageSent($message))->toOthers();
-                return Inertia::render('ChatRoom');
+    public function chatStore(Request $request)
+    {
+        $message = $request->message;
+        $storeMsg = Message::create([
+            'message' => $message,
+            'user_id' => Session::get('session_id'),
+        ]);
+        event(new \App\Events\MessageSent($message));
+        return response()->json([
+            'success' => true,
+            'message' => 'Message stored successfully',
+            'data' => $storeMsg,
+        ]);
     }
 }
