@@ -15,16 +15,20 @@ class MessageSent implements ShouldBroadcastNow
     use InteractsWithSockets, SerializesModels;
 
     public $message;
+    public $roomId;
 
-    public function __construct($message)
+
+    public function __construct($message, $roomId)
     {
         $this->message = $message;
+        $this->roomId = $roomId;
+
     }
 
 
     public function broadcastOn()
     {
-        return new Channel("chat-channel"); // Public channel
+        return new Channel("chat-room-{$this->roomId}");
     }
 
     public function broadcastAs()

@@ -10,3 +10,93 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
+
+
+
+.btn-selected {
+    --inset: 0.3rem;
+    color: #ffff !important;
+    text-align: center;
+    letter-spacing: 2px;
+    border: 0;
+    border-radius: 1rem;
+    color: hsl(180, 7%, 68%);
+    text-shadow: 0px -1px 0.5px #0005;
+    background-color: #337eed !important;
+    background-image: linear-gradient(
+        180deg,
+        #337eed,
+        30%,
+        hsl(180, 29%, 33%),
+        #1f73f1,
+        #337eed
+    ) !important;
+    border: #0007 1px solid;
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    cursor: pointer;
+    outline: none;
+    transition: all 133ms ease-out;
+}
+
+.btn-selected::before {
+    z-index: -1;
+    content: "";
+    position: absolute;
+    inset: 0.3rem;
+    border-radius: calc(1rem - var(--inset));
+    box-shadow: 0 1px 0.5px -0.5px hsla(180, 69%, 83%, 0.8),
+        inset 0px 0px 0px 1px hsl(180, 13%, 10%), inset 0 0 3px 1px #102c2c;
+}
+
+.btn-selected::after {
+    content: "";
+    position: absolute;
+    inset: 0.3rem;
+    z-index: -1;
+    border-radius: calc(1rem - var(--inset)) calc(1rem - var(--inset)) 0 0;
+    height: 75%;
+    background: linear-gradient(-15deg, #0000 50%, #fff4 51%);
+    filter: invert(50%);
+    mix-blend-mode: color-burn;
+    opacity: 0;
+}
+
+.btn-selected:active::before {
+    box-shadow: inset 0 0 0 1px #26262d, inset 0 0px 2px 1px #0009,
+        inset 0 -1.5px 0.5px 0.5px hsla(180, 12%, 43%),
+        0 1px 0.25px -0.25px hsla(180, 69%, 83%, 0.8);
+    background-image: linear-gradient(
+        180deg,
+        hsl(180, 13%, 34%),
+        hsl(180, 8%, 50%),
+        hsl(180, 13%, 34%)
+    ) !important;
+}
+
+.btn-selected:hover[aria-selected="false"] {
+    filter: brightness(110%);
+    box-shadow: 0 1px 5px #fff2, 0 10px 14px -4px #0008;
+}
+
+.btn-selected:active[aria-selected="false"] {
+    scale: 0.96;
+    filter: unset;
+    box-shadow: none;
+}
+
+.btn-selected:active[aria-selected="true"] {
+    box-shadow: none;
+    scale: 0.96;
+}
+
+.btn-selected[aria-selected="true"] {
+    box-shadow: 0 10px 20px -3px rgba(0, 0, 0, 0.2),
+        0 15px 30px rgba(0, 0, 0, 0.3);
+    filter: brightness(120%);
+}
+
+.btn-selected[aria-selected="true"]:not(:active)::after {
+    opacity: 1;
+}

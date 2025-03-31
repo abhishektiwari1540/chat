@@ -2,25 +2,30 @@ import React, { useState, useEffect } from "react";
 import Header from "./Layouts/Header";
 import Footer from "./Layouts/Footer";
 import { Send } from "lucide-react";
+import { usePage } from "@inertiajs/react"; // Import usePage hook
 
-export default function ChatRoom() {
+
+export default function ChatRoom({ rooms }) {
+    const { url } = usePage();
+    const roomId = new URLSearchParams(url.split('?')[1]).get('roomId');
     const [messages, setMessages] = useState([]);
     const [input, setInput] = useState("");
 
     useEffect(() => {
         // Fetch previous messages
-        const fetchMessages = async () => {
-            try {
-                const response = await fetch(route("home.chat.room"));
-                const data = await response.json();
-                setMessages(data.messages); // Ensure backend sends { messages: [...] }
-            } catch (error) {
-                console.error("Error fetching messages:", error);
-            }
-        };
+        // const fetchMessages = async () => {
+        //     try {
+        //         const response = await fetch(route("home.chat.room"));
+        //         const data = await response.json();
+        //         setMessages(data.messages); // Ensure backend sends { messages: [...] }
+        //     } catch (error) {
+        //         console.error("Error fetching messages:", error);
+        //     }
+        // };
 
-        fetchMessages(); // Load old messages
-        const channel = window.Echo.channel("chat-channel");
+        // fetchMessages();
+        if (!roomId) return;
+        const channel = window.Echo.channel(`chat-room-${roomId}`);
         channel.listen(".MessageSent", (event) => {
             console.log("New message received:", event);
             setMessages((prevMessages) => [
@@ -32,7 +37,7 @@ export default function ChatRoom() {
         return () => {
             channel.stopListening(".MessageSent");
         };
-    }, []);
+    }, [roomId]);
 
     const sendMessage = async () => {
         if (input.trim()) {
@@ -44,7 +49,7 @@ export default function ChatRoom() {
                     "Content-Type": "application/json",
                     "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
                 },
-                body: JSON.stringify({ message: input }),
+                body: JSON.stringify({ message: input, roomId: roomId }),
                 credentials: "include",
             });
 
@@ -55,7 +60,10 @@ export default function ChatRoom() {
     return (
         <>
             <Header />
+
             <div className="container mx-auto mt-4 p-4">
+                <div>
+                </div>
                 <div className="flex h-[80vh] shadow-lg rounded-lg overflow-hidden border border-gray-300">
 
                     {/* Chat Window */}

@@ -14,6 +14,7 @@ class Message extends Model
         'seen_status',
         'seen_at',
         'message',
+        'room_no',
     ];
 
     /**
