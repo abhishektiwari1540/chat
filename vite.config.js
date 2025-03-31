@@ -14,6 +14,9 @@ export default defineConfig({
         }),
         react(),
     ],
+    build: {
+        outDir: 'dist',
+    },
     resolve: {
         alias: {
             '@': path.resolve(__dirname, 'resources/js')
